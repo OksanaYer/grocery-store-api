@@ -4,33 +4,36 @@ export interface IUser extends Document {
   name: string;
   email: string;
   password: string;
-  createdAt?: Date;
-  updatedAt?: Date;
 }
 
 const userSchema = new Schema<IUser>(
   {
     name: {
       type: String,
-      required: [true, "Name is required"],
+      required: true,
       trim: true,
     },
+
     email: {
       type: String,
-      required: [true, "Email is required"],
+      required: true,
       unique: true,
       lowercase: true,
       trim: true,
     },
+
     password: {
       type: String,
-      required: [true, "Password is required"],
-      minlength: 8,
+      required: true,
+      select: false, // 👈 пароль НЕ возвращается в ответах API
     },
   },
   {
     timestamps: true,
+    versionKey: false,
   }
 );
 
-export default model<IUser>("User", userSchema);
+const User = model<IUser>("User", userSchema);
+
+export default User;

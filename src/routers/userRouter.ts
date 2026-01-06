@@ -1,4 +1,5 @@
 import { Router } from "express";
+
 import {
   getAllUsers,
   getUserById,
@@ -7,12 +8,43 @@ import {
   deleteUser,
 } from "../controllers/userController.ts";
 
+import { validate } from "../middleware/validate.ts";
+import {
+  createUserSchema,
+  updateUserSchema,
+  userIdParamSchema,
+} from "../schemas/userSch.ts";
+
 const userRouter = Router();
 
+// GET users 
 userRouter.get("/", getAllUsers);
-userRouter.get("/:id", getUserById);
-userRouter.post("/", createUser);
-userRouter.put("/:id", updateUser);
-userRouter.delete("/:id", deleteUser);
+
+userRouter.get(
+  "/:id",
+  validate(userIdParamSchema),
+  getUserById
+);
+
+// POST users 
+userRouter.post(
+  "/",
+  validate(createUserSchema),
+  createUser
+);
+
+// PUT user обновить 
+userRouter.put(
+  "/:id",
+  validate(updateUserSchema),
+  updateUser
+);
+
+// DELETE 
+userRouter.delete(
+  "/:id",
+  validate(userIdParamSchema),
+  deleteUser
+);
 
 export default userRouter;

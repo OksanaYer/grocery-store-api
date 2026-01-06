@@ -2,7 +2,7 @@ import type { RequestHandler } from "express";
 import Product from "../models/Product.ts";
 import Category from "../models/Category.ts";
 
-/* ================= CREATE ================= */
+
 export const createProduct: RequestHandler = async (req, res) => {
   try {
     const { name, description, price, category } = req.body;
@@ -13,15 +13,14 @@ export const createProduct: RequestHandler = async (req, res) => {
       });
     }
 
-    // 1️⃣ find category
+    
     let existingCategory = await Category.findOne({ name: category });
 
-    // 2️⃣ create category if not exists
+
     if (!existingCategory) {
       existingCategory = await Category.create({ name: category });
     }
 
-    // 3️⃣ create product
     const product = await Product.create({
       name,
       description,
@@ -36,7 +35,6 @@ export const createProduct: RequestHandler = async (req, res) => {
   }
 };
 
-/* ================= GET ALL ================= */
 export const getAllProducts: RequestHandler = async (_req, res) => {
   try {
     const products = await Product.find().populate("categoryId");
@@ -46,7 +44,7 @@ export const getAllProducts: RequestHandler = async (_req, res) => {
   }
 };
 
-/* ================= GET BY ID ================= */
+
 export const getProductById: RequestHandler = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id).populate("categoryId");
@@ -61,7 +59,7 @@ export const getProductById: RequestHandler = async (req, res) => {
   }
 };
 
-/* ================= UPDATE ================= */
+
 export const updateProduct: RequestHandler = async (req, res) => {
   try {
     const { name, description, price, category } = req.body;
@@ -92,7 +90,7 @@ export const updateProduct: RequestHandler = async (req, res) => {
   }
 };
 
-/* ================= DELETE ================= */
+
 export const deleteProduct: RequestHandler = async (req, res) => {
   try {
     const product = await Product.findByIdAndDelete(req.params.id);
